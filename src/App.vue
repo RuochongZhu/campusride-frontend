@@ -1,31 +1,52 @@
 <template>
   <div id="app">
-    <!-- 这里先放一个简单的页面，确保系统能够运行 -->
-    <h1>CampusRide - 系统正在工作</h1>
-    <p>这是一个测试页面，证明Vue.js和构建系统正常运行</p>
+    <!-- 根据路由决定是否显示导航栏 -->
+    <HeaderComponent v-if="!hideNavigation" />
     
-    <!-- 临时放置你现有的一个页面内容，比如首页 -->
-    <div class="temp-content">
-      <!-- 这里可以直接复制粘贴你现有页面的HTML内容 -->
-      <!-- 暂时不用担心组件化，先让它能够显示 -->
-    </div>
+    <!-- 路由视图 - 这里显示不同的页面 -->
+    <router-view />
+    
+    <!-- 根据路由决定是否显示页脚 -->
+    <FooterComponent v-if="!hideNavigation" />
   </div>
 </template>
 
 <script setup>
-// 暂时这里什么都不需要，让页面能够显示即可
-console.log('CampusRide应用已启动')
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import HeaderComponent from '@/components/layout/HeaderComponent.vue'
+import FooterComponent from '@/components/layout/FooterComponent.vue'
+
+const route = useRoute()
+
+// 计算是否隐藏导航栏（比如登录页面）
+const hideNavigation = computed(() => {
+  return route.meta.hideNavigation || false
+})
 </script>
 
 <style>
-/* 这里可以暂时放置基本的样式 */
-#app {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+@import './assets/styles/tailwind.css';
+
+* {
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.temp-content {
-  margin-top: 20px;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
 }
 </style>

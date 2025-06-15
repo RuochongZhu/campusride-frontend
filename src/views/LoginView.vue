@@ -1,4 +1,3 @@
-<!-- The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work. -->
 <template>
 <div class="min-h-screen flex items-center justify-center bg-gray-100">
 <div class="flex w-full max-w-5xl shadow-lg rounded-lg overflow-hidden">
@@ -19,14 +18,16 @@ class="object-cover w-full h-auto"
 <h1 class="text-2xl font-bold text-[#B31B1B]">Campus Ride Home</h1>
 </div>
 <h2 class="text-2xl font-bold text-gray-900 mb-6">Log in</h2>
-<form>
+<form @submit.prevent="handleSignIn">
 <div class="mb-4">
 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">University email address</label>
 <input
 type="email"
 id="email"
+v-model="email"
 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B31B1B] focus:border-transparent"
 placeholder="name@university.edu"
+required
 />
 </div>
 <div class="mb-6">
@@ -34,13 +35,14 @@ placeholder="name@university.edu"
 <input
 type="password"
 id="password"
+v-model="password"
 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B31B1B] focus:border-transparent"
+required
 />
 </div>
 <button
-type="button"
-@click="handleSignIn"
-class="w-full bg-[#B31B1B] hover:bg-[#8F1515] text-white font-medium py-2 px-4 rounded-md !rounded-button cursor-pointer whitespace-nowrap mb-4"
+type="submit"
+class="w-full bg-[#B31B1B] hover:bg-[#8F1515] text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 mb-4"
 >
 Sign In
 </button>
@@ -50,7 +52,7 @@ Sign In
 <span class="bg-white px-2 text-sm text-gray-500 relative">or</span>
 </div>
 <button
-class="w-full flex items-center justify-center bg-white border border-gray-300 rounded-md py-2 px-4 text-gray-700 hover:bg-gray-50 mb-3 !rounded-button cursor-pointer whitespace-nowrap"
+class="w-full flex items-center justify-center bg-white border border-gray-300 rounded-md py-2 px-4 text-gray-700 hover:bg-gray-50 mb-3 transition-colors duration-300"
 @click="signInWithGoogle"
 >
 <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -62,7 +64,7 @@ class="w-full flex items-center justify-center bg-white border border-gray-300 r
 Sign in with Google
 </button>
 <button
-class="w-full flex items-center justify-center bg-[#B31B1B] text-white rounded-md py-2 px-4 hover:bg-[#8F1515] !rounded-button cursor-pointer whitespace-nowrap"
+class="w-full flex items-center justify-center bg-[#B31B1B] text-white rounded-md py-2 px-4 hover:bg-[#8F1515] transition-colors duration-300"
 @click="signInWithCampusID"
 >
 <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -79,23 +81,50 @@ Don't have an account?
 </div>
 </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
 
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const email = ref('')
+const password = ref('')
+
+// 修改后的登录函数 - 使用Vue Router跳转
 const handleSignIn = () => {
-  window.location.href = 'https://readdy.ai/home/7052541b-09e2-4468-9b64-d935f2cf9437/b09167fc-39c6-4391-93f1-8dc9494513d9';
-};
+  // 简化的登录验证
+  if (email.value && password.value) {
+    // 设置认证token
+    localStorage.setItem('userToken', 'demo-token')
+    localStorage.setItem('userData', JSON.stringify({
+      email: email.value,
+      name: 'Demo User'
+    }))
+    
+    // 使用Vue Router跳转到主页，而不是window.location.href
+    router.push('/')
+  }
+}
 
 const signInWithGoogle = () => {
-  // Google authentication logic would go here
-  console.log('Sign in with Google clicked');
-};
+  // Google登录逻辑
+  console.log('Sign in with Google clicked')
+  // 模拟Google登录成功
+  localStorage.setItem('userToken', 'google-token')
+  router.push('/')
+}
+
 const signInWithCampusID = () => {
-// Campus ID authentication logic would go here
-console.log('Sign in with Campus ID clicked');
-};
+  // Campus ID登录逻辑
+  console.log('Sign in with Campus ID clicked')
+  // 模拟Campus ID登录成功
+  localStorage.setItem('userToken', 'campus-token')
+  router.push('/')
+}
 </script>
+
 <style scoped>
+/* 保留原有样式 */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
 -webkit-appearance: none;

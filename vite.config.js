@@ -1,8 +1,23 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
 
-// 这个配置告诉Vite如何处理Vue.js文件
 export default defineConfig({
-  plugins: [vue()], // 启用Vue.js支持
-  base: './', // 确保构建后的文件可以在任何服务器上运行
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
+  },
+  server: {
+    port: 3000,
+    host: true
+  },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    rollupOptions: {
+      input: resolve(__dirname, 'index.html')
+    }
+  }
 })
