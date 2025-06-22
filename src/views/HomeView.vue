@@ -265,6 +265,25 @@ const topContributors = [
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
+.nav-link {
+@apply text-[#666666] hover:text-[#C24D45] font-medium relative;
+}
+
+.nav-link::after {
+content: '';
+position: absolute;
+width: 0;
+height: 2px;
+bottom: -4px;
+left: 0;
+background-color: #C24D45;
+transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+width: 100%;
+}
+
 input[type="text"] {
 @apply text-sm;
 }
