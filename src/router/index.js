@@ -11,6 +11,10 @@ import LeaderboardView from '@/views/LeaderboardView.vue'
 const routes = [
   {
     path: '/',
+    redirect: '/login'
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: HomeView,
     meta: { 
@@ -95,7 +99,7 @@ router.beforeEach((to, from, next) => {
       query: { redirect: to.fullPath }
     })
   } else if (to.path === '/login' && isAuthenticated) {
-    next('/')
+    next('/home')
   } else {
     next()
   }
