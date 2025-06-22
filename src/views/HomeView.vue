@@ -6,7 +6,6 @@
 <div class="absolute inset-0 bg-grid-pattern opacity-20"></div>
 <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-20"></div>
 <div class="max-w-7xl mx-auto px-4">
-<div class="grid md:grid-cols-2 gap-8 items-center">
 <div>
 <swiper
 :modules="swiperModules"
@@ -29,7 +28,6 @@ class="h-full"
 </swiper>
 </div>
 </div>
-</div>
 </section>
 
 <!-- Popular Routes -->
@@ -49,6 +47,7 @@ View Carpooling
 class="w-full hover:scale-[1.02] transition-transform duration-300"
 >
 <swiper-slide v-for="route in popularRoutes" :key="route.id">
+<router-link to="/rideshare">
 <div class="bg-white rounded-lg shadow-sm p-6 cursor-pointer hover:scale-105 transition-transform duration-300 hover:shadow-lg backdrop-blur-sm bg-opacity-90">
 <div class="flex items-center mb-4">
 <EnvironmentOutlined class="text-xl text-[#63B5B7] mr-2" />
@@ -64,6 +63,7 @@ class="w-full hover:scale-[1.02] transition-transform duration-300"
 <TeamOutlined class="mr-1" /> {{ route.riders }} active carpools
 </div>
 </div>
+</router-link>
 </swiper-slide>
 </swiper>
 </div>
@@ -86,6 +86,7 @@ Campus Marketplace
 class="w-full hover:scale-[1.02] transition-transform duration-300"
 >
 <swiper-slide v-for="item in marketplaceItems" :key="item.id">
+<router-link to="/marketplace">
 <div class="bg-[#EDEEE8] rounded-lg shadow-sm overflow-hidden cursor-pointer hover:scale-105 transition-transform duration-300 hover:shadow-lg backdrop-blur-sm bg-opacity-90">
 <img :src="item.image" class="w-full h-48 object-cover" />
 <div class="p-4">
@@ -99,6 +100,7 @@ class="w-full hover:scale-[1.02] transition-transform duration-300"
 </div>
 </div>
 </div>
+</router-link>
 </swiper-slide>
 </swiper>
 </div>
@@ -121,6 +123,7 @@ Campus Activities
 class="w-full hover:scale-[1.02] transition-transform duration-300"
 >
 <swiper-slide v-for="activity in activities" :key="activity.id">
+<router-link to="/activities">
 <div class="bg-[#EDEEE8] rounded-lg shadow-sm overflow-hidden cursor-pointer hover:scale-105 transition-transform duration-300 hover:shadow-lg backdrop-blur-sm bg-opacity-90">
 <img :src="activity.image" class="w-full h-48 object-cover" />
 <div class="p-4">
@@ -134,6 +137,7 @@ class="w-full hover:scale-[1.02] transition-transform duration-300"
 </div>
 </div>
 </div>
+</router-link>
 </swiper-slide>
 </swiper>
 </div>
