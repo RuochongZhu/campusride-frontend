@@ -42,7 +42,7 @@ required
 </div>
 <button
 type="submit"
-class="w-full bg-[#B31B1B] hover:bg-[#8F1515] text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 mb-4"
+class="w-full bg-[#B31B1B] hover:bg-[#8F1515] text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 mb-4 cursor-pointer whitespace-nowrap"
 >
 Sign In
 </button>
@@ -52,7 +52,7 @@ Sign In
 <span class="bg-white px-2 text-sm text-gray-500 relative">or</span>
 </div>
 <button
-class="w-full flex items-center justify-center bg-white border border-gray-300 rounded-md py-2 px-4 text-gray-700 hover:bg-gray-50 mb-3 transition-colors duration-300"
+class="w-full flex items-center justify-center bg-white border border-gray-300 rounded-md py-2 px-4 text-gray-700 hover:bg-gray-50 mb-3 transition-colors duration-300 cursor-pointer whitespace-nowrap"
 @click="signInWithGoogle"
 >
 <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -64,7 +64,7 @@ class="w-full flex items-center justify-center bg-white border border-gray-300 r
 Sign in with Google
 </button>
 <button
-class="w-full flex items-center justify-center bg-[#B31B1B] text-white rounded-md py-2 px-4 hover:bg-[#8F1515] transition-colors duration-300"
+class="w-full flex items-center justify-center bg-[#B31B1B] text-white rounded-md py-2 px-4 hover:bg-[#8F1515] transition-colors duration-300 cursor-pointer whitespace-nowrap"
 @click="signInWithCampusID"
 >
 <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">

@@ -13,30 +13,27 @@
           >
             <div class="flex items-center justify-between mb-4">
               <h3 class="text-lg font-medium text-[#333333]">{{ group.name }}</h3>
-              <span 
-                :class="['px-2 py-1 rounded-full text-xs font-medium', group.category.color]"
-              >
-                {{ group.category.name }}
-              </span>
+              <a-tag :color="group.category.color">{{ group.category.name }}</a-tag>
             </div>
             <p class="text-sm text-[#666666] mb-4">{{ group.description }}</p>
             <div class="flex items-center justify-between text-sm">
               <div class="flex items-center space-x-4">
-                <div class="flex items-center">
-                  <span class="mr-1">Ì±•</span>
+                <div class="flex items-center text-gray-500">
+                  <TeamOutlined class="mr-1" />
                   <span>{{ group.members }} members</span>
                 </div>
-                <div class="flex items-center">
-                  <span class="mr-1">‚è∞</span>
+                <div class="flex items-center text-gray-500">
+                  <ClockCircleOutlined class="mr-1" />
                   <span>{{ group.activeTime }}</span>
                 </div>
               </div>
-              <button 
-                class="bg-[#C24D45] hover:bg-[#A93C35] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              <a-button 
+                type="primary" 
+                class="!rounded-button bg-[#C24D45] border-none hover:bg-[#A93C35] whitespace-nowrap"
                 @click="joinGroup(group)"
               >
                 Join Group
-              </button>
+              </a-button>
             </div>
           </div>
         </div>
@@ -48,39 +45,23 @@
           <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
               <div class="mb-4 md:mb-0">
-                <div class="flex space-x-2">
-                  <button
-                    v-for="filter in feedFilters"
-                    :key="filter"
-                    :class="['px-4 py-2 rounded-md text-sm font-medium transition-colors',
-                    feedFilter === filter ? 'bg-[#C24D45] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
-                    @click="feedFilter = filter"
-                  >
-                    {{ filter }}
-                  </button>
-                </div>
+                <a-radio-group v-model:value="feedFilter" button-style="solid">
+                  <a-radio-button value="all">All Activities</a-radio-button>
+                  <a-radio-button value="groups">My Groups</a-radio-button>
+                  <a-radio-button value="urgent">Urgent Needs</a-radio-button>
+                </a-radio-group>
               </div>
               <div class="flex items-center space-x-4">
                 <div class="flex items-center">
                   <span class="text-sm text-[#666666] mr-2">Distance:</span>
-                  <input 
-                    type="range" 
-                    v-model="distanceFilter" 
-                    min="500" 
-                    max="5000" 
-                    step="500" 
-                    class="w-32"
-                  />
+                  <a-slider v-model:value="distanceFilter" :min="500" :max="5000" :step="500" class="w-32" />
                   <span class="text-sm text-[#666666] ml-2">{{ distanceFilter / 1000 }}km</span>
                 </div>
-                <select 
-                  v-model="sortOption" 
-                  class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#C24D45]"
-                >
-                  <option value="newest">Newest</option>
-                  <option value="closest">Closest</option>
-                  <option value="relevant">Most Relevant</option>
-                </select>
+                <a-select v-model:value="sortOption" class="w-32">
+                  <a-select-option value="newest">Newest</a-select-option>
+                  <a-select-option value="closest">Closest</a-select-option>
+                  <a-select-option value="relevant">Most Relevant</a-select-option>
+                </a-select>
               </div>
             </div>
 
@@ -99,11 +80,7 @@
                     <div>
                       <div class="flex items-center space-x-2">
                         <h3 class="font-medium text-[#333333]">{{ activity.title }}</h3>
-                        <span 
-                          :class="['px-2 py-1 rounded-full text-xs font-medium', activity.category.color]"
-                        >
-                          {{ activity.category.name }}
-                        </span>
+                        <a-tag :color="activity.category.color">{{ activity.category.name }}</a-tag>
                       </div>
                       <div class="flex items-center text-sm text-[#666666] space-x-2">
                         <span>{{ activity.user.name }}</span>
@@ -118,27 +95,21 @@
                 <p class="text-[#333333] my-3">{{ activity.description }}</p>
                 
                 <div class="flex flex-wrap gap-2 mb-3">
-                  <span 
-                    v-for="tag in activity.tags" 
-                    :key="tag" 
-                    class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"
-                  >
-                    {{ tag }}
-                  </span>
+                  <a-tag v-for="tag in activity.tags" :key="tag" color="blue">{{ tag }}</a-tag>
                 </div>
                 
                 <div class="flex items-center justify-between text-sm text-[#666666]">
                   <div class="flex items-center space-x-4">
                     <div class="flex items-center">
-                      <span class="mr-1">Ì≥ç</span>
+                      <EnvironmentOutlined class="mr-1" />
                       <span>{{ activity.location }} ({{ activity.distance }})</span>
                     </div>
                     <div class="flex items-center">
-                      <span class="mr-1">‚è∞</span>
+                      <ClockCircleOutlined class="mr-1" />
                       <span>Expires in {{ activity.expiresIn }}</span>
                     </div>
                     <div class="flex items-center">
-                      <span class="mr-1">Ì±•</span>
+                      <TeamOutlined class="mr-1" />
                       <span>{{ activity.participants }} participating</span>
                     </div>
                   </div>
@@ -154,41 +125,32 @@
                 </div>
                 
                 <div class="flex justify-end space-x-2 mt-4">
-                  <button 
-                    class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm transition-colors"
+                  <a-button 
+                    class="!rounded-button whitespace-nowrap"
                     @click="sendMessage(activity)"
                   >
-                    Ì≤¨ Message
-                  </button>
-                  <button 
-                    class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm transition-colors"
+                    <MessageOutlined /> Message
+                  </a-button>
+                  <a-button 
+                    class="!rounded-button whitespace-nowrap"
                     @click="shareActivity(activity)"
                   >
-                    Ì≥§ Share
-                  </button>
-                  <button 
-                    class="px-4 py-2 bg-[#C24D45] hover:bg-[#A93C35] text-white rounded-md text-sm font-medium transition-colors"
+                    <ShareAltOutlined /> Share
+                  </a-button>
+                  <a-button 
+                    type="primary"
+                    class="!rounded-button bg-[#C24D45] border-none hover:bg-[#A93C35] whitespace-nowrap"
                     @click="joinActivity(activity)"
                   >
-                    Ì±ç Interested
-                  </button>
+                    <LikeOutlined /> Interested
+                  </a-button>
                 </div>
               </div>
             </div>
 
             <!-- Pagination -->
             <div class="mt-6 flex justify-center">
-              <div class="flex space-x-2">
-                <button 
-                  v-for="page in totalPages" 
-                  :key="page"
-                  :class="['px-3 py-2 rounded-md text-sm transition-colors',
-                  currentPage === page ? 'bg-[#C24D45] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
-                  @click="currentPage = page"
-                >
-                  {{ page }}
-                </button>
-              </div>
+              <a-pagination v-model:current="currentPage" :total="totalPages" />
             </div>
           </div>
         </div>
@@ -199,12 +161,13 @@
           <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex justify-between items-center mb-4">
               <h2 class="text-lg font-medium text-[#333333]">Nearby Radar</h2>
-              <button 
-                class="text-[#C24D45] text-sm font-medium"
+              <a-button 
+                type="link" 
+                class="text-[#C24D45]"
                 @click="toggleMapExpand"
               >
                 {{ isMapExpanded ? 'Collapse' : 'Expand' }}
-              </button>
+              </a-button>
             </div>
             
             <div class="relative bg-[#F5F5F5] rounded-lg overflow-hidden mb-4 h-64">
@@ -308,67 +271,69 @@
       </div>
 
       <!-- Expanded Map Modal -->
-      <div 
-        v-if="isMapExpanded"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        @click="isMapExpanded = false"
+      <a-modal 
+        v-model:visible="isMapExpanded"
+        title="Nearby Radar - Expanded View"
+        :footer="null"
+        width="800px"
+        class="radar-modal"
+        @cancel="isMapExpanded = false"
       >
-        <div class="bg-white rounded-lg p-4 max-w-4xl w-full mx-4" @click.stop>
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-bold">Nearby Radar - Expanded View</h3>
-            <button 
-              class="text-gray-500 hover:text-gray-700"
-              @click="isMapExpanded = false"
-            >
-              ‚úï
-            </button>
+        <div class="relative bg-[#F5F5F5] rounded-lg overflow-hidden" style="height: 600px;">
+          <img :src="mapImage" class="w-full h-full object-cover" />
+          
+          <!-- Larger radar elements for expanded view -->
+          <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-blue-500 rounded-full z-10"></div>
+          
+          <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 border border-gray-400 rounded-full opacity-50"></div>
+          <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 border border-gray-400 rounded-full opacity-50"></div>
+          <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-120 h-120 border border-gray-400 rounded-full opacity-50"></div>
+          
+          <!-- Activity Dots -->
+          <div 
+            v-for="dot in nearbyDots" 
+            :key="dot.id"
+            :class="['absolute rounded-full transition-all duration-300',
+            dot.color,
+            'w-8 h-8']"
+            :style="{ top: dot.top + '%', left: dot.left + '%' }"
+            @mouseenter="showDotInfo(dot)"
+            @mouseleave="hideDotInfo()"
+          >
           </div>
-          <div class="relative bg-[#F5F5F5] rounded-lg overflow-hidden" style="height: 600px;">
-            <img :src="mapImage" class="w-full h-full object-cover" />
-            
-            <!-- Larger radar elements for expanded view -->
-            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-blue-500 rounded-full z-10"></div>
-            
-            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 border border-gray-400 rounded-full opacity-50"></div>
-            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 border border-gray-400 rounded-full opacity-50"></div>
-            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-120 h-120 border border-gray-400 rounded-full opacity-50"></div>
-            
-            <!-- Activity Dots -->
-            <div 
-              v-for="dot in nearbyDots" 
-              :key="dot.id"
-              :class="['absolute rounded-full transition-all duration-300',
-              dot.color,
-              'w-5 h-5']"
-              :style="{ top: dot.top + '%', left: dot.left + '%' }"
-              @mouseenter="showDotInfo(dot)"
-              @mouseleave="hideDotInfo()"
-            >
-            </div>
-            
-            <!-- Expanded Activity Info Popup -->
-            <div 
-              v-if="hoveredDot"
-              class="absolute bg-white p-3 rounded-lg shadow-lg text-sm z-10 max-w-sm"
-              :style="{
-                top: (hoveredDot.top - 10) + '%',
-                left: (hoveredDot.left + 5) + '%'
-              }"
-            >
-              {{ hoveredDot.activityInfo }}
-            </div>
+          
+          <!-- Expanded Activity Info Popup -->
+          <div 
+            v-if="hoveredDot"
+            class="absolute bg-white p-3 rounded-lg shadow-lg text-sm z-10 max-w-sm"
+            :style="{
+              top: (hoveredDot.top - 10) + '%',
+              left: (hoveredDot.left + 5) + '%'
+            }"
+          >
+            {{ hoveredDot.activityInfo }}
           </div>
         </div>
-      </div>
+      </a-modal>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
+import {
+  BellOutlined,
+  EnvironmentOutlined,
+  ClockCircleOutlined,
+  TeamOutlined,
+  MessageOutlined,
+  ShareAltOutlined,
+  LikeOutlined
+} from '@ant-design/icons-vue'
+import { Modal as AModal, Select as ASelect, SelectOption as ASelectOption, Tag as ATag, RadioGroup as ARadioGroup, RadioButton as ARadioButton, Slider as ASlider, Button as AButton, Pagination as APagination } from 'ant-design-vue'
 
 // Reactive data
-const feedFilter = ref('All Activities')
+const feedFilter = ref('all')
 const distanceFilter = ref(1000)
 const sortOption = ref('newest')
 const currentPage = ref(1)
@@ -377,14 +342,14 @@ const isMapExpanded = ref(false)
 const hoveredDot = ref(null)
 
 // Filter options
-const feedFilters = ['All Activities', 'My Groups', 'Urgent Needs']
+const feedFilters = ['all', 'groups', 'urgent']
 
 // Groups data
 const groups = ref([
   {
     id: 'cs5582',
     name: 'CS 5582 Study Group',
-    category: { name: 'Academic', color: 'bg-blue-100 text-blue-800' },
+    category: { name: 'Academic', color: 'blue' },
     description: 'A collaborative group for CS 5582 students to discuss coursework, share resources, and prepare for exams together.',
     members: 45,
     activeTime: 'Very Active'
@@ -392,7 +357,7 @@ const groups = ref([
   {
     id: 'rideshare',
     name: 'Campus Rideshare',
-    category: { name: 'Transportation', color: 'bg-green-100 text-green-800' },
+    category: { name: 'Transportation', color: 'green' },
     description: 'Connect with fellow students for carpooling and ride-sharing to save money and reduce environmental impact.',
     members: 128,
     activeTime: 'Active'
@@ -400,7 +365,7 @@ const groups = ref([
   {
     id: 'basketball',
     name: 'Basketball Club',
-    category: { name: 'Sports', color: 'bg-orange-100 text-orange-800' },
+    category: { name: 'Sports', color: 'orange' },
     description: 'Join casual basketball games and tournaments. All skill levels welcome!',
     members: 76,
     activeTime: 'Very Active'
@@ -408,7 +373,7 @@ const groups = ref([
   {
     id: 'debate',
     name: 'Debate Society',
-    category: { name: 'Academic', color: 'bg-purple-100 text-purple-800' },
+    category: { name: 'Academic', color: 'purple' },
     description: 'Enhance your public speaking and critical thinking skills through structured debates and discussions.',
     members: 52,
     activeTime: 'Moderate'
@@ -416,7 +381,7 @@ const groups = ref([
   {
     id: 'photography',
     name: 'Photography Club',
-    category: { name: 'Arts', color: 'bg-cyan-100 text-cyan-800' },
+    category: { name: 'Arts', color: 'cyan' },
     description: 'Share your passion for photography, learn new techniques, and participate in photo walks around campus.',
     members: 94,
     activeTime: 'Active'
@@ -424,7 +389,7 @@ const groups = ref([
   {
     id: 'volunteer',
     name: 'Community Service',
-    category: { name: 'Volunteer', color: 'bg-red-100 text-red-800' },
+    category: { name: 'Volunteer', color: 'red' },
     description: 'Make a difference in our community through various volunteer opportunities and social initiatives.',
     members: 156,
     activeTime: 'Very Active'
@@ -436,7 +401,7 @@ const activities = ref([
   {
     id: 1,
     title: 'Study Group for Midterm Exam',
-    category: { name: 'Academic', color: 'bg-blue-100 text-blue-800' },
+    category: { name: 'Academic', color: 'blue' },
     user: {
       name: 'Alex Johnson',
       avatar: 'https://readdy.ai/api/search-image?query=professional%20headshot%20of%20young%20male%20student%20with%20glasses%20wearing%20casual%20smart%20attire%20against%20neutral%20background&width=100&height=100&seq=2&orientation=squarish'
@@ -454,7 +419,7 @@ const activities = ref([
   {
     id: 2,
     title: 'Need Help with Physics Assignment',
-    category: { name: 'Help Needed', color: 'bg-red-100 text-red-800' },
+    category: { name: 'Help Needed', color: 'red' },
     user: {
       name: 'Sophia Chen',
       avatar: 'https://readdy.ai/api/search-image?query=professional%20headshot%20of%20young%20female%20asian%20student%20with%20friendly%20smile%20wearing%20casual%20attire%20against%20neutral%20background&width=100&height=100&seq=3&orientation=squarish'
@@ -472,7 +437,7 @@ const activities = ref([
   {
     id: 3,
     title: 'Basketball Pickup Game',
-    category: { name: 'Social', color: 'bg-purple-100 text-purple-800' },
+    category: { name: 'Social', color: 'purple' },
     user: {
       name: 'Marcus Williams',
       avatar: 'https://readdy.ai/api/search-image?query=professional%20headshot%20of%20athletic%20young%20male%20student%20with%20friendly%20smile%20wearing%20sports%20attire%20against%20neutral%20background&width=100&height=100&seq=4&orientation=squarish'
@@ -490,7 +455,7 @@ const activities = ref([
   {
     id: 4,
     title: 'Offering Free Tutoring in Calculus',
-    category: { name: 'Offering Help', color: 'bg-green-100 text-green-800' },
+    category: { name: 'Offering Help', color: 'green' },
     user: {
       name: 'Emily Parker',
       avatar: 'https://readdy.ai/api/search-image?query=professional%20headshot%20of%20young%20female%20student%20with%20glasses%20wearing%20smart%20casual%20attire%20against%20neutral%20background&width=100&height=100&seq=5&orientation=squarish'
@@ -620,9 +585,9 @@ const activityStats = ref({
 const filteredActivities = computed(() => {
   let filtered = activities.value
 
-  if (feedFilter.value === 'My Groups') {
+  if (feedFilter.value === 'groups') {
     filtered = filtered.filter(activity => activity.group.includes('CS 5582'))
-  } else if (feedFilter.value === 'Urgent Needs') {
+  } else if (feedFilter.value === 'urgent') {
     filtered = filtered.filter(activity => activity.category.name === 'Help Needed')
   }
 
@@ -726,5 +691,9 @@ input[type="range"]::-moz-range-thumb {
 /* Animation classes */
 .hover\:-translate-y-1:hover {
   transform: translateY(-0.25rem);
+}
+
+.radar-modal .ant-modal-body {
+  padding: 0;
 }
 </style>
