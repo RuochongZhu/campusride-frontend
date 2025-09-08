@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 // 导入页面组件
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
+import RegisterView from '@/views/RegisterView.vue'
+import EmailVerificationView from '@/views/EmailVerificationView.vue'
 import RideshareView from '@/views/RideshareView.vue'
 import ActivitiesView from '@/views/ActivitiesView.vue'
 import MarketplaceView from '@/views/MarketplaceView.vue'
@@ -29,6 +31,26 @@ const routes = [
     meta: { 
       requiresAuth: false,
       title: 'Login - CampusRide',
+      hideNavigation: true
+    }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: RegisterView,
+    meta: { 
+      requiresAuth: false,
+      title: 'Register - CampusRide',
+      hideNavigation: true
+    }
+  },
+  {
+    path: '/verify-email/:token',
+    name: 'EmailVerification',
+    component: EmailVerificationView,
+    meta: { 
+      requiresAuth: false,
+      title: 'Email Verification - CampusRide',
       hideNavigation: true
     }
   },
@@ -98,7 +120,7 @@ router.beforeEach((to, from, next) => {
       path: '/login',
       query: { redirect: to.fullPath }
     })
-  } else if (to.path === '/login' && isAuthenticated) {
+  } else if ((to.path === '/login' || to.path === '/register') && isAuthenticated) {
     next('/home')
   } else {
     next()
