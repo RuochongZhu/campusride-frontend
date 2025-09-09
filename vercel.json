@@ -3,34 +3,5 @@
     "api/**/*.js": {
       "runtime": "nodejs18.x"
     }
-  },
-  "routes": [
-    {
-      "src": "/api/health",
-      "dest": "/api/health.js"
-    },
-    {
-      "src": "/api/debug", 
-      "dest": "/api/debug.js"
-    },
-    {
-      "src": "/api/v1/health",
-      "dest": "/api/health.js"
-    },
-    {
-      "src": "/api/v1/auth/login", 
-      "dest": "/api/auth/login.js"
-    },
-    {
-      "src": "/api/v1/auth/register",
-      "dest": "/api/auth/register.js"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
+  }
 }
