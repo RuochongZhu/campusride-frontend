@@ -24,6 +24,13 @@
     {
       "src": "/api/v1/auth/register",
       "dest": "/api/auth/register.js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
