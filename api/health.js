@@ -14,12 +14,22 @@ export default function handler(req, res) {
       success: true,
       message: '🎉 CampusRide API is working!',
       timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
       debug: {
         method: req.method,
         url: req.url,
         query: req.query,
-        hasSupabaseUrl: !!process.env.SUPABASE_URL,
-        hasResendKey: !!process.env.RESEND_API_KEY
+        // 环境变量检查
+        env_check: {
+          SUPABASE_URL: !!process.env.SUPABASE_URL ? '✅ SET' : '❌ MISSING',
+          SUPABASE_SERVICE_KEY: !!process.env.SUPABASE_SERVICE_KEY ? '✅ SET' : '❌ MISSING',
+          SUPABASE_ANON_KEY: !!process.env.SUPABASE_ANON_KEY ? '✅ SET' : '❌ MISSING',
+          RESEND_API_KEY: !!process.env.RESEND_API_KEY ? '✅ SET' : '❌ MISSING',
+          RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL || '❌ MISSING',
+          RESEND_FROM_NAME: process.env.RESEND_FROM_NAME || '❌ MISSING',
+          JWT_SECRET: !!process.env.JWT_SECRET ? '✅ SET' : '❌ MISSING',
+          FRONTEND_URL: process.env.FRONTEND_URL || '❌ MISSING'
+        }
       }
     });
   }

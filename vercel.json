@@ -6,6 +6,14 @@
   },
   "routes": [
     {
+      "src": "/api/health",
+      "dest": "/api/health.js"
+    },
+    {
+      "src": "/api/debug", 
+      "dest": "/api/debug.js"
+    },
+    {
       "src": "/api/v1/health",
       "dest": "/api/health.js"
     },
@@ -16,10 +24,6 @@
     {
       "src": "/api/v1/auth/register",
       "dest": "/api/auth/register.js"
-    },
-    {
-      "src": "/api/health",
-      "dest": "/api/health.js"
     }
   ]
 }
