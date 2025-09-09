@@ -6,12 +6,20 @@
   },
   "routes": [
     {
-      "src": "/api/v1/(.*)",
-      "dest": "/api/v1/[...route].js?route=$1"
+      "src": "/api/v1/health",
+      "dest": "/api/health.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "src": "/api/v1/auth/login", 
+      "dest": "/api/auth/login.js"
+    },
+    {
+      "src": "/api/v1/auth/register",
+      "dest": "/api/auth/register.js"
+    },
+    {
+      "src": "/api/health",
+      "dest": "/api/health.js"
     }
   ]
 }
