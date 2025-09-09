@@ -7,7 +7,7 @@
   "routes": [
     {
       "src": "/api/v1/(.*)",
-      "dest": "/api/v1/[...route]"
+      "dest": "/api/v1/[...route]?route=$1"
     },
     {
       "handle": "filesystem"
