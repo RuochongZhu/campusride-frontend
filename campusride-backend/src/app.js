@@ -39,6 +39,8 @@ app.use(helmet());
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL || 'http://localhost:3001', 
+    'https://socialinteraction.club',
+    'https://*.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000',
     'http://localhost:3002'
@@ -110,7 +112,8 @@ const server = createServer(app);
 let socketInitialized = false;
 
 const initializeSocket = async () => {
-  if (!socketInitialized && process.env.NODE_ENV !== 'test') {
+  // 在Vercel等serverless环境中禁用Socket.IO
+  if (!socketInitialized && process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
     try {
       await socketManager.initialize(server);
       socketInitialized = true;
@@ -121,8 +124,8 @@ const initializeSocket = async () => {
   }
 };
 
-// Start server
-if (process.env.NODE_ENV !== 'test') {
+// Start server (仅在非test和非serverless环境中)
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL && !process.env.AWS_LAMBDA_FUNCTION_NAME) {
   server.listen(PORT, async () => {
     console.log(`🚀 CampusRide API server running on port ${PORT}`);
     console.log(`📖 API Documentation: http://localhost:${PORT}/api-docs`);

@@ -115,6 +115,7 @@ required
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { authAPI } from '../utils/api.js'
 
 const router = useRouter()
 const email = ref('')
@@ -124,9 +125,6 @@ const errorMessage = ref('')
 const showResendButton = ref(false)
 const resendEmail = ref('')
 const isResending = ref(false)
-
-// 后端API基础URL
-const API_BASE_URL = 'http://localhost:3000/api/v1'
 
 // 清除错误信息
 const clearError = () => {
@@ -202,51 +200,35 @@ const handleSignIn = async () => {
   
   // 尝试真实后端登录
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value
-      })
+    const data = await authAPI.login({
+      email: email.value,
+      password: password.value
     })
     
-    const data = await response.json()
+    // 保存认证信息
+    localStorage.setItem('userToken', data.data.token)
+    localStorage.setItem('userData', JSON.stringify(data.data.user))
     
-    if (response.ok && data.success) {
-      // 保存认证信息
-      localStorage.setItem('userToken', data.data.token)
-      localStorage.setItem('userData', JSON.stringify(data.data.user))
-      
-      errorMessage.value = ''
-      // 跳转到主页或指定页面
-      const redirect = router.currentRoute.value.query.redirect || '/home'
-      setTimeout(() => {
-        router.push(redirect)
-      }, 500)
-    } else {
-      // 如果是数据库连接错误，提供演示模式提示
-      if (data.error?.code === 'DATABASE_ERROR' || response.status === 500) {
-        errorMessage.value = '数据库连接失败。请使用演示账号登录：\n邮箱: demo@cornell.edu\n密码: demo1234'
-      } else {
-        // 如果是邮箱未验证错误
-        if (data.error?.code === 'EMAIL_NOT_VERIFIED') {
-          errorMessage.value = data.error.message + '\n\n点击下方按钮重新发送验证邮件：'
-          showResendButton.value = true
-          resendEmail.value = email.value
-        } else if (data.error?.code === 'DATABASE_ERROR' || response.status === 500) {
-          errorMessage.value = '数据库连接失败。请使用演示账号登录：\n邮箱: demo@cornell.edu\n密码: demo1234'
-        } else {
-          errorMessage.value = data.error?.message || 'Invalid credentials'
-        }
-      }
-    }
+    errorMessage.value = ''
+    // 跳转到主页或指定页面
+    const redirect = router.currentRoute.value.query.redirect || '/home'
+    setTimeout(() => {
+      router.push(redirect)
+    }, 500)
   } catch (error) {
     console.error('Login error:', error)
-    // 网络错误时提供演示模式
-    errorMessage.value = '无法连接到服务器。\n\n您可以使用演示账号体验系统：\n邮箱: demo@cornell.edu\n密码: demo1234'
+    
+    // 处理不同类型的错误
+    if (error.message.includes('邮箱未验证')) {
+      errorMessage.value = error.message + '\n\n点击下方按钮重新发送验证邮件：'
+      showResendButton.value = true
+      resendEmail.value = email.value
+    } else if (error.message.includes('网络请求失败') || error.message.includes('认证已过期')) {
+      // 网络错误或服务器错误时提供演示模式
+      errorMessage.value = '无法连接到服务器。\n\n您可以使用演示账号体验系统：\n邮箱: demo@cornell.edu\n密码: demo1234'
+    } else {
+      errorMessage.value = error.message || '登录失败，请检查邮箱和密码'
+    }
   } finally {
     isLoading.value = false
   }
@@ -271,27 +253,12 @@ const resendVerification = async () => {
   isResending.value = true
   
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/resend-verification`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: resendEmail.value
-      })
-    })
-    
-    const data = await response.json()
-    
-    if (response.ok && data.success) {
-      errorMessage.value = '验证邮件已发送！请检查您的邮箱。'
-      showResendButton.value = false
-    } else {
-      errorMessage.value = data.error?.message || '发送验证邮件失败'
-    }
+    await authAPI.resendVerification(resendEmail.value)
+    errorMessage.value = '验证邮件已发送！请检查您的邮箱。'
+    showResendButton.value = false
   } catch (error) {
     console.error('Resend verification error:', error)
-    errorMessage.value = '网络错误，请稍后重试'
+    errorMessage.value = error.message || '发送验证邮件失败'
   } finally {
     isResending.value = false
   }

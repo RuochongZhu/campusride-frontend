@@ -126,6 +126,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { authAPI } from '../utils/api.js'
 
 const router = useRouter()
 
@@ -140,8 +141,7 @@ const isLoading = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
 
-// 后端API基础URL
-const API_BASE_URL = 'http://localhost:3000/api/v1'
+// 引入API工具
 
 // 清除提示信息
 const clearMessages = () => {
@@ -192,49 +192,39 @@ const handleRegister = async () => {
   clearMessages()
   
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: form.value.email,
-        password: form.value.password
-      })
+    const data = await authAPI.register({
+      email: form.value.email,
+      password: form.value.password
     })
     
-    const data = await response.json()
+    successMessage.value = '注册成功！请检查您的邮箱并点击验证链接。'
     
-    if (response.ok) {
-      successMessage.value = '注册成功！请检查您的邮箱并点击验证链接。'
-      
-      // 3秒后提示用户检查邮箱
-      setTimeout(() => {
-        if (successMessage.value.includes('检查您的邮箱')) {
-          successMessage.value += '\n\n如果您没有收到邮件，请检查垃圾邮件文件夹或联系管理员。'
-        }
-      }, 3000)
-    } else {
-      // 如果是数据库错误，提供临时的演示模式
-      if (data.error?.code === 'DATABASE_ERROR') {
-        // 临时演示模式 - 模拟注册成功
-        localStorage.setItem('demo_user', JSON.stringify({
-          email: form.value.email
-        }))
-        
-        successMessage.value = '演示模式：注册成功！请检查您的邮箱验证。'
-        
-        // 演示模式下直接跳转到登录页
-        setTimeout(() => {
-          router.push('/login')
-        }, 3000)
-      } else {
-        errorMessage.value = data.error?.message || '注册失败，请重试'
+    // 3秒后提示用户检查邮箱
+    setTimeout(() => {
+      if (successMessage.value.includes('检查您的邮箱')) {
+        successMessage.value += '\n\n如果您没有收到邮件，请检查垃圾邮件文件夹或联系管理员。'
       }
-    }
+    }, 3000)
   } catch (error) {
     console.error('Registration error:', error)
-    errorMessage.value = '网络错误，请检查网络连接'
+    
+    // 处理不同类型的错误
+    if (error.message.includes('邮箱已被注册')) {
+      errorMessage.value = error.message + '\n\n您可以直接使用演示账号登录：demo@cornell.edu / demo1234'
+      localStorage.setItem('demo_user', JSON.stringify({
+        email: form.value.email
+      }))
+    } else if (error.message.includes('网络请求失败')) {
+      // 网络错误时提供演示模式
+      errorMessage.value = '无法连接到服务器，注册功能暂时不可用。\n\n您可以使用演示账号体验系统：demo@cornell.edu / demo1234'
+      
+      // 保存用户信息到本地以备将来使用
+      localStorage.setItem('demo_user', JSON.stringify({
+        email: form.value.email
+      }))
+    } else {
+      errorMessage.value = error.message || '注册失败，请稍后重试'
+    }
   } finally {
     isLoading.value = false
   }
