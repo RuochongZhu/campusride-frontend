@@ -1,16 +1,13 @@
 {
   "functions": {
-    "api/v1/[...route].js": {
+    "api/**/*.js": {
       "runtime": "nodejs18.x"
     }
   },
   "routes": [
     {
       "src": "/api/v1/(.*)",
-      "dest": "/api/v1/[...route]?route=$1"
-    },
-    {
-      "handle": "filesystem"
+      "dest": "/api/v1/[...route].js?route=$1"
     },
     {
       "src": "/(.*)",
